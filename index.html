@@ -119,7 +119,7 @@
 							<div class="display-tc animate-box" data-animate-effect="fadeIn">
 								<h1>Abraão &amp; Nayara</h1>
 								<h2>Chá de Panela e Cozinha</h2>
-								<h2 style="font-style: italic;">12 de Outubro de 2024, às 18h</h2>
+								<h2 style="font-style: italic;">12 de Outubro de 2024, às 16h</h2>
 								<div class="simply-countdown simply-countdown-one"></div>
 								<!-- <p><a href="#" class="btn btn-default btn-sm">Save the date</a></p> -->
 							</div>
@@ -144,34 +144,15 @@
 					</div>
 				</div>
 
-				<div class="fh5co-gift-container">
-					<ul id="gift-list" class="row">
-					</ul>
-				</div>
-				<!-- <div class="couple-wrap animate-box">
-				<div class="couple-half">
-					<div class="groom">
-						<img src="images/groom.jpg" alt="groom" class="img-responsive">
-					</div>
-					<div class="desc-groom">
-						<h3>Joefrey Mahusay</h3>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-					</div>
-				</div>
-				<p class="heart text-center"><i class="icon-heart2"></i></p>
-				<div class="couple-half">
-					<div class="bride">
-						<img src="images/bride.jpg" alt="groom" class="img-responsive">
-					</div>
-					<div class="desc-bride">
-						<h3>Sheila Mahusay</h3>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove</p>
-					</div>
-				</div>
-			</div> -->
+				<form id="itemForm" class="itemList">
+					<ul id="itemList"></ul>
+					<button type="button" onclick="confirmSelection()" class="submit-btn" id="submit-btn">
+						<span id="submit-btn-label">Confirmar Presentes</span>
+						<img id="submit-btn-loader" src="images/loader.gif" style="display: none;">
+					</button>
+				</form>
 			</div>
 		</div>
-
 
 		<!-- <div id="fh5co-couple-story">
 		<div class="container">
@@ -535,20 +516,26 @@
 								<div class="col-md-12 col-sm-12 text-center">
 									<div class="event-wrap animate-box">
 										<h3>Chá de Panela e Cozinha</h3>
-										<div class="event-col">
-											<i class="icon-clock"></i>
-											<span>18:00h</span>
-										</div>
+										
 										<div class="event-col">
 											<i class="icon-calendar"></i>
 											<span>12 de Outubro de 2024</span>
 										</div>
+										<div class="event-col">
+											<i class="icon-clock"></i>
+											<span>16:00h</span>
+										</div>
+
+										
 										<p>
 											<i class="icon-location"></i>
 											<span>Igreja Presbiteriana Renovada Gama Leste</span>
-											<span>Igreja Presbiteriana Renovada Gama Leste</span>
+											<span>Quadra 36 lotes 24/26, Gama Leste - Brasília/DF</span>
 										</p>
-										<p><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d61354.88797774449!2d-48.1344061!3d-16.0301392!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935980411d4564b9%3A0xdd64b272de21c576!2sIgreja%20Presbiteriana%20Renovada%20Gama%20Leste!5e0!3m2!1spt-BR!2sbr!4v1726351373415!5m2!1spt-BR!2sbr" width="100%" height="300" style="border: 5px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></p>
+										<p><iframe
+												src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d61354.88797774449!2d-48.1344061!3d-16.0301392!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x935980411d4564b9%3A0xdd64b272de21c576!2sIgreja%20Presbiteriana%20Renovada%20Gama%20Leste!5e0!3m2!1spt-BR!2sbr!4v1726351373415!5m2!1spt-BR!2sbr"
+												width="100%" height="300" style="border: 5px;" allowfullscreen=""
+												loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></p>
 									</div>
 								</div>
 							</div>
@@ -613,7 +600,7 @@
 	<script src="js/main.js"></script>
 
 	<script>
-		var d = new Date(new Date(2024, 9, 12, 18, 0, 0));
+		var d = new Date(new Date(2024, 9, 12, 16, 0, 0));
 		console.log(d);
 
 		// default example
@@ -630,6 +617,91 @@
 			day: d.getDate(),
 			enableUtc: false
 		});
+	</script>
+
+	<script>
+		const apiUrl = 'https://script.google.com/macros/s/AKfycby-Wv5iOUYv4Kr1k7KrdsUSBzTHPyXt6sNlfIM9dND6bg0S1yZ9jNrjeIs86X2baglpBQ/exec';
+
+		// Confirm the selection and remove chosen items
+		async function confirmSelection() {
+			const selectedItems = Array.from(document.querySelectorAll('input[name="items"]:checked'))
+				.map(checkbox => checkbox.value);
+
+			if (selectedItems.length === 0) {
+				alert('Selecione pelo menos 1 presente');
+				return;
+			}
+			
+			const btn = document.getElementById('submit-btn')
+			const btnLabel = document.getElementById('submit-btn-label')
+			const btnLoader = document.getElementById('submit-btn-loader')
+			
+			btn.disabled = true;
+			btnLabel.style.display = 'none';
+			btnLoader.style.display = 'inline';
+
+
+
+			for (const item of selectedItems) {
+				await removeItem(item); // Call removeItem for each selected item
+			}
+
+			fetchItems(); // Refresh the list after removal
+			location.reload();
+		}
+
+		// Remove item by posting to the Google Apps Script
+		async function removeItem(item) {
+			try {
+				const response = await fetch(apiUrl, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: new URLSearchParams({
+						item: item,
+					}),
+				});
+
+				if (!response.ok) {
+					throw new Error('Failed to remove item: ' + item);
+				}
+			} catch (error) {
+				console.error('Error removing item:', error);
+			}
+		}
+
+		// Fetch available items from Google Sheets
+		async function fetchItems() {
+			try {
+				const response = await fetch(apiUrl);
+				const items = await response.json();
+				const itemList = document.getElementById('itemList');
+				itemList.classList.add('itemList')
+				itemList.innerHTML = ''; // Clear the list before appending
+
+				items.forEach(item => {
+					const li = document.createElement('li');
+
+					// Create checkbox
+					const checkbox = document.createElement('input');
+					checkbox.type = 'checkbox';
+					checkbox.id = item;
+					checkbox.value = item;
+					checkbox.name = 'items';
+
+					const label = document.createElement('label');
+					label.htmlFor = item;
+					label.textContent = item;
+
+					li.appendChild(checkbox);
+					li.appendChild(label);
+					itemList.appendChild(li);
+				});
+			} catch (error) {
+				console.error('Error fetching items:', error);
+			}
+		}
 	</script>
 
 </body>

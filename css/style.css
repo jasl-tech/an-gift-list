@@ -69,6 +69,14 @@ h1, h2, h3, h4, h5, h6, figure {
   margin: 0 0 20px 0;
 }
 
+ul {
+  list-style-type: none;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
 ::-webkit-selection {
   color: #fff;
   background: #F14E95;
@@ -991,6 +999,12 @@ form label {
   /* words */
 }
 
+@media screen and (max-width: 768px) {
+  .simply-countdown {
+    height: 400px;
+  }
+}
+
 #fh5co-testimonial,
 #fh5co-services,
 #fh5co-started,
@@ -1843,10 +1857,20 @@ form label {
 
 /*# sourceMappingURL=style.css.map */
 
-.fh5co-gift-container {
-
+.itemList li label {
+  margin-left: 15px;
+  font-size: 18px;
 }
 
-.gift-item {
-
+.submit-btn {
+  margin: auto;
+  display: block;
+  background-color: #ffa600;
+  border: none;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
 }

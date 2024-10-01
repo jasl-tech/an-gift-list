@@ -68,6 +68,8 @@
 		'Forma de Gelo',
 	]
 
+	const apiUrl = 'https://script.google.com/macros/s/AKfycby-Wv5iOUYv4Kr1k7KrdsUSBzTHPyXt6sNlfIM9dND6bg0S1yZ9jNrjeIs86X2baglpBQ/exec'; // Add your web app URL here
+
 	'use strict';
 
 	var mobileMenuOutsideClick = function () {
@@ -287,17 +289,47 @@
 
 		giftList.forEach(gift => {
 			const giftItem = document.createElement('li');
-            giftItem.classList.add('gift-item');
-            giftItem.classList.add('col-sm-12');
-            giftItem.classList.add('col-md-6');
+			giftItem.classList.add('gift-item');
+			giftItem.classList.add('col-sm-12');
+			giftItem.classList.add('col-md-6');
 
-            // Disable checkbox if the gift is already selected
-            giftItem.innerHTML = `<span>${gift}</span>`;
-            giftListElement.appendChild(giftItem);
+			// Disable checkbox if the gift is already selected
+			giftItem.innerHTML = `<span>${gift}</span>`;
+			giftListElement.appendChild(giftItem);
 		})
 
 	};
 
+	// Fetch available items from Google Sheets
+	async function fetchItems() {
+		try {
+			const response = await fetch(apiUrl);
+			const items = await response.json();
+			const itemList = document.getElementById('itemList');
+			itemList.innerHTML = ''; // Clear the list before appending
+
+			items.forEach(item => {
+				const li = document.createElement('li');
+
+				// Create checkbox
+				const checkbox = document.createElement('input');
+				checkbox.type = 'checkbox';
+				checkbox.id = item;
+				checkbox.value = item;
+				checkbox.name = 'items';
+
+				const label = document.createElement('label');
+				label.htmlFor = item;
+				label.textContent = item;
+
+				li.appendChild(checkbox);
+				li.appendChild(label);
+				itemList.appendChild(li);
+			});
+		} catch (error) {
+			console.error('Error fetching items:', error);
+		}
+	}
 
 	$(function () {
 		mobileMenuOutsideClick();
@@ -311,8 +343,7 @@
 		loaderPage();
 		counter();
 		counterWayPoint();
-		mountList();
+		// mountList();
+		fetchItems();
 	});
-
-
 }());
